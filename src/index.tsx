@@ -3,13 +3,10 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import {createUploadLink} from 'apollo-upload-client'
 import {ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation} from "@apollo/client";
-import {buildAxiosFetch} from '@lifeomic/axios-fetch'
-import axios from 'axios'
+import {customFetch} from "./custom-fetch";
 
 
 // смотреть здесь https://github.com/jaydenseric/apollo-upload-client/issues/88
-// другой вариант исполнения https://github.com/jaydenseric/apollo-upload-client/issues/88#issuecomment-468318261
-
 const MUTATION = gql`
     mutation($file: Upload!) {
         fileUpload(file: $file) {
@@ -27,14 +24,11 @@ function UploadFile() {
                               files: [file],
                           },
                       }: any) {
-
-
         if (validity.valid) mutate({
             variables: {file}, context: {
                 fetchOptions: {
-                    onUploadProgress: (progress: any) => {
-                        // вот так можно достать прогресс загрузки
-                        console.log(progress.loaded / progress.total)
+                    getProgress(progress: number) {
+                        console.log(progress)
                     }
                 }
             }
@@ -52,10 +46,16 @@ function UploadFile() {
 const link = createUploadLink({
     uri: `http://localhost:4001/graphql`,
     //@ts-ignore
-    fetch: buildAxiosFetch(axios, (config, input, init) => ({
-        ...config,
-        onUploadProgress: init.onUploadProgress,
-    })),
+    // fetch: buildAxiosFetch(axios, (config, input, init) => ({
+    //     ...config,
+    //     onUploadProgress: init.onUploadProgress,
+    // })),
+    fetch: customFetch,
+    fetchOptions: {
+        onProgress: (progress: number) => {
+            console.log(progress);
+        },
+    },
 });
 
 
