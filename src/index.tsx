@@ -27,7 +27,7 @@ function UploadFile() {
         if (validity.valid) mutate({
             variables: {file}, context: {
                 fetchOptions: {
-                    getProgress(progress: number) {
+                    getProgress(progress: any) {
                         console.log(progress)
                     }
                 }
