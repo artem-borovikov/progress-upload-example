@@ -1,4 +1,3 @@
-// @ts-ignore
 import React from "react";
 import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
@@ -6,7 +5,10 @@ import {createUploadLink} from 'apollo-upload-client'
 import {ApolloClient, ApolloProvider, gql, InMemoryCache, useMutation} from "@apollo/client";
 import {buildAxiosFetch} from '@lifeomic/axios-fetch'
 import axios from 'axios'
-import fetch from 'node-fetch';
+
+
+// смотреть здесь https://github.com/jaydenseric/apollo-upload-client/issues/88
+// другой вариант исполнения https://github.com/jaydenseric/apollo-upload-client/issues/88#issuecomment-468318261
 
 const MUTATION = gql`
     mutation($file: Upload!) {
@@ -31,6 +33,7 @@ function UploadFile() {
             variables: {file}, context: {
                 fetchOptions: {
                     onUploadProgress: (progress: any) => {
+                        // вот так можно достать прогресс загрузки
                         console.log(progress.loaded / progress.total)
                     }
                 }
@@ -42,7 +45,8 @@ function UploadFile() {
         type="file"
         required
         //@ts-ignore
-        onChange={onChange}/>;
+        onChange={onChange}
+    />;
 }
 
 const link = createUploadLink({
