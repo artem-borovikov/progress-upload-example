@@ -8,9 +8,9 @@ import {customFetch} from "./custom-fetch";
 
 // смотреть здесь https://github.com/jaydenseric/apollo-upload-client/issues/88
 const MUTATION = gql`
-    mutation($file: Upload!) {
-        fileUpload(file: $file) {
-            fileName
+    mutation($file: Upload!, $apID: Int!) {
+        recognitionUpload(file: $file, apID: $apID) {
+            filename
         }
     }
 `;
@@ -25,7 +25,7 @@ function UploadFile() {
                           },
                       }: any) {
         if (validity.valid) mutate({
-            variables: {file}, context: {
+            variables: {file, apID: 0}, context: {
                 fetchOptions: {
                     getProgress(progress: any) {
                         console.log(progress)
