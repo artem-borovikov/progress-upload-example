@@ -9,7 +9,7 @@ import {customFetch} from "./custom-fetch";
 // смотреть здесь https://github.com/jaydenseric/apollo-upload-client/issues/88
 const MUTATION = gql`
     mutation($file: Upload!, $apID: Int!) {
-        recognitionUpload(file: $file, apID: $apID) {
+        recognitionFileUpload(file: $file, apID: $apID) {
             filename
         }
     }
